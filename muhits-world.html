@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Muhit's World</title>
+<style>
+:root{
+  --bg:#070a1a; --bg2:#0d1230; --card:rgba(255,255,255,.06); --border:rgba(140,160,255,.22);
+  --text:#e8ecff; --muted:#9aa6d6; --a1:#7c5cff; --a2:#27c6ff; --a3:#ff5ca8; --gold:#ffd166;
+}
+:root[data-theme="light"]{
+  --bg:#eef1ff; --bg2:#dfe5ff; --card:rgba(255,255,255,.7); --border:rgba(90,100,200,.25);
+  --text:#1a1f45; --muted:#555d94;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;background:linear-gradient(180deg,var(--bg),var(--bg2));color:var(--text);line-height:1.6;overflow-x:hidden;transition:background .4s,color .4s}
+#stars{position:fixed;inset:0;z-index:0;pointer-events:none}
+section,header,footer{position:relative;z-index:1}
+nav{position:fixed;top:0;left:0;right:0;z-index:20;display:flex;justify-content:space-between;align-items:center;padding:12px 5vw;backdrop-filter:blur(14px);background:color-mix(in srgb,var(--bg) 60%,transparent);border-bottom:1px solid var(--border)}
+nav .logo{font-weight:800;letter-spacing:.12em;font-size:.95rem;background:linear-gradient(90deg,var(--a2),var(--a1),var(--a3));-webkit-background-clip:text;background-clip:text;color:transparent}
+nav .links{display:flex;gap:18px;font-size:.88rem}
+nav .links a{color:var(--muted);text-decoration:none;transition:.2s}
+nav .links a:hover{color:var(--a2)}
+.tools{display:flex;gap:8px}
+.tools button{background:var(--card);border:1px solid var(--border);color:var(--text);width:36px;height:36px;border-radius:50%;cursor:pointer;font-size:1rem}
+.tools button:hover{box-shadow:0 0 14px var(--a1)}
+@media(max-width:720px){nav .links{display:none}}
+
+.hero{min-height:100vh;display:flex;align-items:center;justify-content:center;gap:5vw;padding:110px 6vw 60px;flex-wrap:wrap-reverse;text-align:left}
+.hero-text{max-width:560px}
+.chip{display:inline-block;padding:5px 14px;border-radius:99px;border:1px solid var(--border);background:var(--card);font-size:.8rem;color:var(--a2);margin-bottom:18px;letter-spacing:.06em}
+h1{font-size:clamp(2.2rem,6vw,4rem);line-height:1.1;margin-bottom:14px}
+h1 span{background:linear-gradient(90deg,var(--a2),var(--a1),var(--a3));-webkit-background-clip:text;background-clip:text;color:transparent}
+.sub{color:var(--muted);font-size:1.08rem;margin-bottom:8px}
+.typed{min-height:1.6em;color:var(--gold);font-weight:600;margin-bottom:26px}
+.btn{display:inline-block;padding:12px 26px;border-radius:12px;border:none;font-weight:700;font-size:.95rem;cursor:pointer;text-decoration:none;transition:.25s;margin:0 10px 10px 0}
+.btn.primary{background:linear-gradient(90deg,var(--a1),var(--a2));color:#fff;box-shadow:0 0 22px rgba(124,92,255,.5)}
+.btn.primary:hover{transform:translateY(-3px);box-shadow:0 0 34px rgba(39,198,255,.7)}
+.btn.ghost{background:var(--card);color:var(--text);border:1px solid var(--border)}
+.btn.ghost:hover{border-color:var(--a2);transform:translateY(-3px)}
+
+.avatar-wrap{position:relative;width:min(300px,70vw);aspect-ratio:1}
+.avatar-wrap::before{content:"";position:absolute;inset:-8px;border-radius:50%;background:conic-gradient(var(--a1),var(--a2),var(--a3),var(--a1));animation:spin 6s linear infinite;filter:blur(10px);opacity:.8}
+.avatar{position:relative;width:100%;height:100%;border-radius:50%;overflow:hidden;border:4px solid var(--bg);background:var(--bg2);cursor:pointer;display:flex;align-items:center;justify-content:center;flex-direction:column;text-align:center;color:var(--muted);font-size:.9rem;padding:20px}
+.avatar img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.avatar .ph{font-size:3rem}
+.avatar .hint{position:absolute;bottom:0;left:0;right:0;background:rgba(0,0,0,.55);color:#fff;font-size:.72rem;padding:6px;opacity:0;transition:.2s;z-index:2}
+.avatar:hover .hint{opacity:1}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+section.block{padding:90px 6vw;max-width:1150px;margin:auto}
+h2{font-size:clamp(1.6rem,4vw,2.4rem);margin-bottom:6px}
+h2::after{content:"";display:block;width:60px;height:4px;border-radius:4px;margin-top:8px;background:linear-gradient(90deg,var(--a1),var(--a2))}
+.lead{color:var(--muted);margin:14px 0 34px}
+.reveal{opacity:0;transform:translateY(34px);transition:1s cubic-bezier(.2,.7,.2,1)}
+.reveal.in{opacity:1;transform:none}
+
+.glass{background:var(--card);border:1px solid var(--border);border-radius:20px;backdrop-filter:blur(12px);padding:26px;transition:.3s}
+.glass:hover{border-color:var(--a2);box-shadow:0 0 28px rgba(39,198,255,.2)}
+.grid{display:grid;gap:20px;grid-template-columns:repeat(auto-fit,minmax(230px,1fr))}
+
+.flip{perspective:1000px;height:230px;cursor:pointer}
+.flip-in{position:relative;width:100%;height:100%;transition:transform .7s;transform-style:preserve-3d}
+.flip.on .flip-in{transform:rotateY(180deg)}
+.face{position:absolute;inset:0;backface-visibility:hidden;border-radius:20px;padding:24px;display:flex;flex-direction:column;justify-content:center;background:var(--card);border:1px solid var(--border);backdrop-filter:blur(12px)}
+.face.back{transform:rotateY(180deg);background:linear-gradient(135deg,rgba(124,92,255,.35),rgba(39,198,255,.25))}
+.face h3{margin-bottom:6px}
+.face p{color:var(--muted);font-size:.93rem}
+.face .tap{margin-top:12px;font-size:.75rem;color:var(--a2)}
+.big{font-size:2.2rem;margin-bottom:8px}
+
+.hobby{cursor:pointer;text-align:center}
+.hobby:hover{transform:translateY(-8px) scale(1.02)}
+.hobby .ic{font-size:2.6rem;margin-bottom:8px}
+.hobby p{color:var(--muted);font-size:.9rem}
+
+.modal{position:fixed;inset:0;z-index:50;background:rgba(0,0,0,.65);display:none;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(4px)}
+.modal.open{display:flex}
+.modal .box{max-width:440px;width:100%;background:var(--bg2);border:1px solid var(--a1);border-radius:22px;padding:30px;box-shadow:0 0 40px rgba(124,92,255,.4);animation:pop .3s}
+.modal .box ul{margin:14px 0 20px 20px;color:var(--muted)}
+@keyframes pop{from{transform:scale(.85);opacity:0}}
+[contenteditable]{outline:1px dashed var(--border);border-radius:6px;padding:0 4px}
+
+.quest{display:flex;align-items:center;gap:14px;padding:16px 20px;margin-bottom:12px;cursor:pointer;user-select:none}
+.quest .box{width:26px;height:26px;border-radius:8px;border:2px solid var(--a1);display:flex;align-items:center;justify-content:center;flex:none;transition:.25s}
+.quest.done .box{background:linear-gradient(135deg,var(--a1),var(--a2));color:#fff}
+.quest.done .qt{text-decoration:line-through;opacity:.6}
+.quest small{display:block;color:var(--muted)}
+.bar{height:14px;border-radius:99px;background:var(--card);border:1px solid var(--border);overflow:hidden;margin:6px 0 20px}
+.bar i{display:block;height:100%;width:0;border-radius:99px;background:linear-gradient(90deg,var(--a1),var(--a2),var(--a3));transition:width .8s cubic-bezier(.2,.8,.2,1)}
+.lbl{display:flex;justify-content:space-between;font-size:.85rem;color:var(--muted)}
+
+.mystery{text-align:center}
+.mbox{font-size:4.5rem;cursor:pointer;display:inline-block;animation:float 3s ease-in-out infinite;user-select:none}
+.mbox:active{transform:scale(.85) rotate(-8deg)}
+@keyframes float{50%{transform:translateY(-12px)}}
+#fact{margin-top:14px;min-height:3em;color:var(--gold);font-weight:600}
+
+.potion{text-align:center}
+.bowl{font-size:5rem;cursor:pointer;display:inline-block;transition:.3s;user-select:none}
+.bowl:hover{transform:scale(1.12) rotate(6deg)}
+.hp{height:20px;max-width:380px;margin:14px auto 8px;border-radius:99px;border:1px solid var(--border);overflow:hidden;background:rgba(255,80,100,.15)}
+.hp i{display:block;height:100%;width:35%;background:linear-gradient(90deg,#ff5c7a,#ffd166,#4ade80);transition:width 1s}
+
+footer{text-align:center;padding:80px 6vw 50px;color:var(--muted)}
+footer .quote{font-size:1.3rem;color:var(--text);margin-bottom:20px;font-style:italic}
+#toast{position:fixed;left:50%;bottom:28px;transform:translate(-50%,120px);background:var(--bg2);border:1px solid var(--a2);color:var(--text);padding:12px 22px;border-radius:14px;z-index:99;transition:.5s;box-shadow:0 0 24px rgba(39,198,255,.4)}
+#toast.show{transform:translate(-50%,0)}
+</style>
+</head>
+<body>
+<canvas id="stars"></canvas>
+
+<nav>
+  <div class="logo">MUHIT.WORLD</div>
+  <div class="links"><a href="#about">About</a><a href="#hobbies">Hobbies</a><a href="#dreams">Dreams</a><a href="#friends">Friends</a><a href="#little">Little Things</a></div>
+  <div class="tools"><button id="themeBtn" title="Day / Night">🌙</button><button id="soundBtn" title="Sound (off)">🔇</button></div>
+</nav>
+
+<header class="hero" id="home">
+  <div class="hero-text">
+    <span class="chip">📖 CHAPTER 01 · THE COLLEGE ARC</span>
+    <h1>Welcome to <span>Muhit's World</span></h1>
+    <p class="sub">A college student. An anime enthusiast. A dreamer building his own future.</p>
+    <p class="typed" id="typed"></p>
+    <a href="#about" class="btn primary">Explore My World</a>
+    <a href="#little" class="btn ghost">Get to Know Me</a>
+  </div>
+  <div class="avatar-wrap">
+    <div class="avatar" id="avatar" title="Click to add your photo">
+      <img id="avatarImg" alt="Muhit" style="display:none">
+      <div id="avatarPh"><div class="ph">📷</div>Click here to add your photo</div>
+      <div class="hint">Click to change photo</div>
+    </div>
+    <input type="file" id="photoInput" accept="image/*" hidden>
+  </div>
+</header>
+
+<section class="block reveal" id="about">
+  <h2>Who Am I?</h2>
+  <p class="lead">Tap the cards to flip them.</p>
+  <div class="grid">
+    <div class="flip"><div class="flip-in">
+      <div class="face"><div class="big">🪪</div><h3>Md. Borkotullah Muhit</h3><p>Student · Dreamer · Anime fan</p><span class="tap">tap to flip ↻</span></div>
+      <div class="face back"><h3>The Goal</h3><p>To become a good person, earn well, and live a happy, comfortable life.</p></div>
+    </div></div>
+    <div class="flip"><div class="flip-in">
+      <div class="face"><div class="big">🎓</div><h3>Government M. M. City College</h3><p>Khulna · Current chapter</p><span class="tap">tap to flip ↻</span></div>
+      <div class="face back"><h3>New Beginning</h3><p>Just started college life after finishing SSC. A whole new arc begins.</p></div>
+    </div></div>
+    <div class="flip"><div class="flip-in">
+      <div class="face"><div class="big">🏫</div><h3>St. Joseph's High School</h3><p>Khulna · Origin story</p><span class="tap">tap to flip ↻</span></div>
+      <div class="face back"><h3>Where It Started</h3><p>The school years that shaped who I am, ending with SSC.</p></div>
+    </div></div>
+  </div>
+</section>
+
+<section class="block reveal" id="hobbies">
+  <h2>My Universe</h2>
+  <p class="lead">Click a card to open my favorites. (You can edit the text inside!)</p>
+  <div class="grid">
+    <div class="glass hobby" data-k="manga"><div class="ic">📚</div><h3>Manga</h3><p>Stories told through art.</p></div>
+    <div class="glass hobby" data-k="ln"><div class="ic">📖</div><h3>Light Novels</h3><p>Worlds built through words.</p></div>
+    <div class="glass hobby" data-k="anime"><div class="ic">🎬</div><h3>Anime</h3><p>Characters and unforgettable moments.</p></div>
+    <div class="glass hobby" data-k="games"><div class="ic">🎮</div><h3>Gaming</h3><p>A little adventure outside everyday life.</p></div>
+  </div>
+</section>
+
+<section class="block reveal" id="dreams">
+  <h2>My Dreams</h2>
+  <p class="lead">The quest log. Tick a goal when you get there.</p>
+  <div class="lbl"><span>Main Quest Progress</span><span id="pct">0%</span></div>
+  <div class="bar"><i id="qbar"></i></div>
+  <div class="glass quest"><div class="box"></div><div><span class="qt">Become a good person</span><small>Kind, honest, and reliable. Every single day.</small></div></div>
+  <div class="glass quest"><div class="box"></div><div><span class="qt">Do well in HSC</span><small>Build the foundation for the future.</small></div></div>
+  <div class="glass quest"><div class="box"></div><div><span class="qt">Learn a valuable skill</span><small>Something that can grow into a career.</small></div></div>
+  <div class="glass quest"><div class="box"></div><div><span class="qt">Build financial independence</span><small>Earn enough to live comfortably.</small></div></div>
+  <div class="glass quest"><div class="box"></div><div><span class="qt">Live a happy, meaningful life</span><small>The final goal.</small></div></div>
+</section>
+
+<section class="block reveal" id="friends">
+  <h2>My Inner Circle</h2>
+  <p class="lead">The party members. Flip to see a message.</p>
+  <div class="grid">
+    <div class="flip"><div class="flip-in">
+      <div class="face"><div class="big">🛡️</div><h3>Mansim</h3><p>Party member · Close friend</p><span class="tap">tap to flip ↻</span></div>
+      <div class="face back"><h3 contenteditable>To Mansim</h3><p contenteditable>Write a memory or inside joke here. Click the text to edit it.</p></div>
+    </div></div>
+    <div class="flip"><div class="flip-in">
+      <div class="face"><div class="big">⚔️</div><h3>Remon</h3><p>Party member · Close friend</p><span class="tap">tap to flip ↻</span></div>
+      <div class="face back"><h3 contenteditable>To Remon</h3><p contenteditable>Write a memory or inside joke here. Click the text to edit it.</p></div>
+    </div></div>
+  </div>
+</section>
+
+<section class="block reveal" id="little">
+  <h2>Little Things About Me</h2>
+  <p class="lead">Tiny details that make this world mine.</p>
+  <div class="grid">
+    <div class="glass mystery">
+      <div class="mbox" id="mbox">🎁</div>
+      <p>Open the mystery box</p>
+      <div id="fact">Click the box!</div>
+    </div>
+    <div class="glass potion">
+      <div class="bowl" id="bowl">🍛</div>
+      <p><b>Full HP Potion</b> · Rice &amp; Curry</p>
+      <div class="hp"><i id="hpbar"></i></div>
+      <div id="hptxt" style="color:var(--muted);font-size:.9rem">HP: 35%. Click the bowl!</div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="quote">“Every person has a story. This is a small part of mine.”</div>
+  <p>Thanks for visiting Muhit's World ✨</p>
+  <p style="font-size:.8rem;margin-top:10px">Psst… try the Konami code: ↑ ↑ ↓ ↓ ← → ← → B A</p>
+</footer>
+
+<div class="modal" id="modal"><div class="box">
+  <h2 id="mTitle" style="margin-bottom:0"></h2>
+  <ul id="mList"></ul>
+  <button class="btn primary" onclick="closeModal()">Close</button>
+</div></div>
+<div id="toast"></div>
+
+<script>
+/* ===== SETTINGS: edit these ===== */
+const PHOTO_SRC = "";  // Optional: put your photo's file name here, e.g. "me.jpg" (upload it next to this file on GitHub). Leave empty to use the click-to-upload photo.
+const TYPED_LINES = ["Reading manga till late night.", "Dreaming big, working step by step.", "Rice and curry makes everything better.", "Playing games with Mansim and Remon."];
+const FACTS = [
+  "I'd choose rice and curry over almost any food. 🍛",
+  "Currently on Chapter 01: The College Arc. 🎓",
+  "I read manga and light novels to escape into other worlds. 📚",
+  "My two best party members are Mansim and Remon. 🛡️⚔️",
+  "My main quest: become a good person. ✨",
+  "I play video games occasionally, but I always enjoy them. 🎮"
+];
+const HOBBIES = {
+  manga:["📚 Manga","Favorite manga: (edit me)","Currently reading: (edit me)","Rating: ⭐⭐⭐⭐⭐"],
+  ln:["📖 Light Novels","Favorite light novel: (edit me)","Currently reading: (edit me)","Rating: ⭐⭐⭐⭐⭐"],
+  anime:["🎬 Anime","Favorite anime: (edit me)","Currently watching: (edit me)","Rating: ⭐⭐⭐⭐⭐"],
+  games:["🎮 Gaming","Favorite game: (edit me)","Currently playing: (edit me)","Rating: ⭐⭐⭐⭐⭐"]
+};
+/* ================================ */
+
+const $ = s => document.querySelector(s), $$ = s => [...document.querySelectorAll(s)];
+const store = {
+  get(k){ try{return localStorage.getItem(k)}catch(e){return null} },
+  set(k,v){ try{localStorage.setItem(k,v)}catch(e){} }
+};
+
+/* sound */
+let soundOn = false, actx;
+function blip(f=660,d=.09){
+  if(!soundOn) return;
+  try{
+    actx = actx || new (window.AudioContext||window.webkitAudioContext)();
+    const o = actx.createOscillator(), g = actx.createGain();
+    o.type="square"; o.frequency.value=f; g.gain.value=.04;
+    o.connect(g); g.connect(actx.destination); o.start();
+    g.gain.exponentialRampToValueAtTime(.0001, actx.currentTime+d); o.stop(actx.currentTime+d);
+  }catch(e){}
+}
+$("#soundBtn").onclick = () => { soundOn=!soundOn; $("#soundBtn").textContent = soundOn?"🔊":"🔇"; blip(880); };
+
+/* theme */
+function setTheme(t){ document.documentElement.dataset.theme=t; $("#themeBtn").textContent = t==="dark"?"🌙":"☀️"; store.set("theme",t); }
+setTheme(store.get("theme")||"dark");
+$("#themeBtn").onclick = () => { setTheme(document.documentElement.dataset.theme==="dark"?"light":"dark"); blip(520); };
+
+/* toast */
+let tt;
+function toast(msg){ const t=$("#toast"); t.textContent=msg; t.classList.add("show"); clearTimeout(tt); tt=setTimeout(()=>t.classList.remove("show"),2400); }
+
+/* photo */
+const img = $("#avatarImg");
+function showPhoto(src){ img.src=src; img.style.display="block"; $("#avatarPh").style.display="none"; }
+if(PHOTO_SRC) showPhoto(PHOTO_SRC);
+else { const saved = store.get("muhitPhoto"); if(saved) showPhoto(saved); }
+$("#avatar").onclick = () => $("#photoInput").click();
+$("#photoInput").onchange = e => {
+  const f = e.target.files[0]; if(!f) return;
+  const r = new FileReader();
+  r.onload = () => {
+    const im = new Image();
+    im.onload = () => {
+      const s = 600, c = document.createElement("canvas"); c.width=c.height=s;
+      const m = Math.min(im.width, im.height);
+      c.getContext("2d").drawImage(im,(im.width-m)/2,(im.height-m)/2,m,m,0,0,s,s);
+      const data = c.toDataURL("image/jpeg",.85);
+      showPhoto(data); store.set("muhitPhoto",data);
+      toast("Photo updated! 📸 (saved in this browser)");
+    };
+    im.src = r.result;
+  };
+  r.readAsDataURL(f);
+};
+
+/* typed text */
+let li=0, ci=0, del=false;
+(function type(){
+  const line = TYPED_LINES[li];
+  $("#typed").textContent = line.slice(0,ci) + "▌";
+  if(!del && ci<line.length) ci++;
+  else if(!del){ del=true; return setTimeout(type,1500); }
+  else if(del && ci>0) ci--;
+  else { del=false; li=(li+1)%TYPED_LINES.length; }
+  setTimeout(type, del?30:60);
+})();
+
+/* flip cards */
+$$(".flip").forEach(f => f.onclick = () => { f.classList.toggle("on"); blip(600); });
+
+/* hobbies modal */
+$$(".hobby").forEach(h => h.onclick = () => {
+  const d = HOBBIES[h.dataset.k];
+  $("#mTitle").textContent = d[0];
+  $("#mList").innerHTML = d.slice(1).map(x=>`<li contenteditable>${x}</li>`).join("");
+  $("#modal").classList.add("open"); blip(740);
+});
+function closeModal(){ $("#modal").classList.remove("open"); }
+$("#modal").onclick = e => { if(e.target.id==="modal") closeModal(); };
+
+/* quests */
+const quests = $$(".quest");
+const doneSaved = JSON.parse(store.get("quests")||"[]");
+function updateQuests(first){
+  const n = quests.filter(q=>q.classList.contains("done")).length;
+  const p = Math.round(n/quests.length*100);
+  $("#qbar").style.width = p+"%"; $("#pct").textContent = p+"%";
+  store.set("quests", JSON.stringify(quests.map((q,i)=>q.classList.contains("done")?i:-1).filter(i=>i>=0)));
+  if(!first && p===100) toast("🏆 ALL QUESTS COMPLETE! You did it!");
+}
+quests.forEach((q,i) => {
+  const b = q.querySelector(".box");
+  if(doneSaved.includes(i)){ q.classList.add("done"); b.textContent="✓"; }
+  q.onclick = () => {
+    q.classList.toggle("done");
+    const d = q.classList.contains("done");
+    b.textContent = d ? "✓" : "";
+    if(d){ toast("⭐ Quest Complete!"); blip(988,.2); }
+    updateQuests();
+  };
+});
+updateQuests(true);
+
+/* mystery box */
+let lastF=-1;
+$("#mbox").onclick = () => {
+  let i; do{ i=Math.floor(Math.random()*FACTS.length) }while(i===lastF && FACTS.length>1);
+  lastF=i; $("#fact").textContent=FACTS[i]; blip(700+i*60);
+};
+
+/* potion */
+let hp=35;
+$("#bowl").onclick = () => {
+  hp = Math.min(100, hp+25);
+  $("#hpbar").style.width = hp+"%";
+  $("#hptxt").textContent = hp>=100 ? "HP fully restored! 🍛✨ Rice and curry wins again." : `HP: ${hp}%. Keep eating!`;
+  blip(520+hp*3);
+  if(hp>=100) setTimeout(()=>{hp=35; $("#hpbar").style.width="35%"},4000);
+};
+$("#hpbar").style.width="35%";
+
+/* scroll reveal */
+const io = new IntersectionObserver(es => es.forEach(e => { if(e.isIntersecting) e.target.classList.add("in"); }), {threshold:.12});
+$$(".reveal").forEach(el => io.observe(el));
+
+/* konami */
+const K=[38,38,40,40,37,39,37,39,66,65]; let ki=0;
+addEventListener("keydown", e => {
+  ki = (e.keyCode===K[ki]) ? ki+1 : (e.keyCode===K[0]?1:0);
+  if(ki===K.length){ ki=0; document.body.style.filter = document.body.style.filter ? "" : "hue-rotate(150deg)"; toast("🎮 Secret unlocked! Colors shifted."); blip(1200,.3); }
+});
+
+/* starfield */
+const cv=$("#stars"), cx=cv.getContext("2d"); let W,H,stars=[];
+function resize(){ W=cv.width=innerWidth; H=cv.height=innerHeight; stars=Array.from({length:Math.min(140,W/8)},()=>({x:Math.random()*W,y:Math.random()*H,r:Math.random()*1.6+.3,s:Math.random()*.4+.05,t:Math.random()*6})); }
+addEventListener("resize",resize); resize();
+(function draw(){
+  cx.clearRect(0,0,W,H);
+  const light = document.documentElement.dataset.theme==="light";
+  stars.forEach(s=>{
+    s.y += s.s; s.t += .03; if(s.y>H){s.y=-5;s.x=Math.random()*W}
+    cx.globalAlpha = .35+.5*Math.abs(Math.sin(s.t));
+    cx.fillStyle = light ? "#7c5cff" : "#cfe0ff";
+    cx.beginPath(); cx.arc(s.x,s.y,s.r,0,6.3); cx.fill();
+  });
+  requestAnimationFrame(draw);
+})();
+</script>
+</body>
+</html>
